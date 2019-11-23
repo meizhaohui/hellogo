@@ -2,9 +2,19 @@
 Recording the process of learning Golang
 本仓库用于记录学习Golang相关知识点。
 
+Go编程语言中文文档中介绍Go:
+
+- Go编程语言是一个开源项目，它使程序员更具生产力。
+
+- Go语言具有很强的表达能力，它简洁、清晰而高效。得益于其并发机制，用它编写的程序能够非常有效地利用多核与联网的计算机，其新颖的类型系统则使程序结构变得灵活而模块化。Go代码编译成机器码不仅非常迅速，还具有方便的垃圾收集机制和强大的运行时反射机制。 它是一个快速的、静态类型的编译型语言，感觉却像动态类型的解释型语言。
+
+
+我们可以简单的理解Go语言解决了其他语言并发执行的痛点，像C语言一样的运行效率高，又兼容了Python语言的开发速度快的特点，``Go = C + Python``, Go语言被称为"互联网时代的C"。我们不在概念上过多的纠结，直接来开始使用Go这门编程语言。
+
 ## 特别说明
 
 - 本文档中``Golang``简写为``Go``。
+- 本文档假定您会使用Linux操作系统的基本命令，如vim、cat、ls等一些工具。
 - ``Go``学习网站：官方文档 https://golang.google.cn/doc/
 - ``Go``学习网站：Go编程语言中文文档 https://go-zh.org/doc/
 - ``Go``学习网站：Go语言之旅 https://go-tour-zh.appspot.com/list
@@ -227,7 +237,7 @@ export GOBIN=${GOPATH}/bin # golang exe files
 export PATH=${GOBIN}:${PATH}
 ```
 
-保存后，加载配置文件，并查看以三设置的Go语言的环境变量：
+保存后，``source ~/.bashrc``加载配置文件，并查看以上设置的Go语言的环境变量：
 ```shell
 [meizhaohui@hellogitlab ~]$ source ~/.bashrc
 [meizhaohui@hellogitlab ~]$ echo $GOPATH
@@ -241,6 +251,35 @@ export PATH=${GOBIN}:${PATH}
 ```
 
 查看到以上信息，说环境变量配置成功。
+
+### 开启Go module和代理
+
+默认情况下，使用go get下载包时会非常慢，需要开启Go module和代理，加快我们包的安装速度。
+
+为了今后中国的Go语言开发者能更好地进行开发，七牛云推出了非营利性项目 goproxy.cn，其目标是为中国和世界上其他地方的 Gopher 们提供一个免费的、可靠的、持续在线的且经过 CDN 加速的模块代理。
+
+参考：
+- 干货满满的 Go Modules 和 goproxy.cn https://github.com/EDDYCJY/blog/blob/master/talk/goproxy-cn.md
+- Go module和goproxy 设置 https://luhua.cc/2019/08/23/Go-module-%E5%92%8C-goproxy-%E8%AE%BE%E7%BD%AE/
+
+在``~/.bashrc``文件中增加以下内容：
+
+```shell
+export GO111MODULE=on
+export GOPROXY=https://goproxy.cn
+```
+
+保存后，``source ~/.bashrc``加载配置文件，并查看以上设置的Go语言的环境变量：
+
+```shell
+[meizhaohui@hellogitlab ~]$ echo $GO111MODULE
+on
+[meizhaohui@hellogitlab ~]$ echo $GOPROXY 
+https://goproxy.cn
+
+# 测试安装包
+[meizhaohui@hellogitlab ~]$ go get -v github.com/stamblerre/gocode
+```
 
 
 ## 第一个Go程序，你好世界
@@ -311,4 +350,77 @@ Hello,World
 [meizhaohui@hellogitlab src]$ cd
 [meizhaohui@hellogitlab ~]$ hello
 Hello,World
+```
+
+## GO语言之旅
+
+### 基础
+
+### 注释
+
+- Go语言支持C风格的块注释``/* */``和C++风格的行注释``//``。 行注释更为常用，而块注释则主要用作包的注释，当然也可在禁用一大段代码时使用。
+
+我们在``hello.go``中增加一下注释。
+
+查看源文件内容：
+
+```shell
+[meizhaohui@hellogitlab src]$ cat hello.go
+/*
+File    : hello.go
+Author  : Zhaohui Mei<mzh.whut@gmail.com>
+Date    : 2019-11-23
+Sammary : display hello world
+*/
+package main
+
+import "fmt" // 导入包fmt
+
+// 主函数,在main包中，主函数必须以main命名
+func main() {
+        // 打印输出"Hello,World"
+        fmt.Println("Hello,World")
+}
+```
+
+再次运行程序：
+
+```shell
+[meizhaohui@hellogitlab src]$ go run hello.go 
+Hello,World
+```
+
+#### 包、变量、函数
+
+```shell
+
+
+```
+
+
+```shell
+
+
+```
+
+
+
+```shell
+
+
+```
+
+
+
+
+```shell
+
+
+```
+
+
+
+```shell
+
+
 ```
