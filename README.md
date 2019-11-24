@@ -418,7 +418,7 @@ Hello,World
 /*
  *      Filename: packages.go
  *        Author: Zhaohui Mei<mzh.whut@gmail.com>
- *   Description:
+ *   Description: go package
  *   Create Time: 2019-11-24 17:27:21
  * Last Modified: 2019-11-24 17:28:34
  */
@@ -457,7 +457,7 @@ The rand Number:  1
 /*
  *      Filename: packages.go
  *        Author: Zhaohui Mei<mzh.whut@gmail.com>
- *   Description:
+ *   Description: go import and name exported
  *   Create Time: 2019-11-24 17:27:21
  * Last Modified: 2019-11-24 17:54:50
  */
@@ -495,8 +495,194 @@ The PI:  3.141592653589793
 
 可以正常获取到``pi``的值为``3.141592653589793``。
 
+该示例中，我们使用了三个包：
 
-```shell
+- "fmt" ：fmt包使用函数实现 I/O 格式化（类似于 C 的 printf 和 scanf 的函数）, 格式化参数源自C，但更简单。
+- "math" ：math包提供了基本的常量和数学函数。
+- "math/rand" ： rand包执行伪随机数生成器。
+
+参考：
+- 腾讯云开发者手册-Go教程 https://cloud.tencent.com/developer/doc/1101
 
 
+##### 函数简介
+
+- 函数是基本的代码块，用于执行一个任务。
+- Go语言最少有个``main()``函数。
+- Go语言中，函数可以接收0个或多个参数。
+- 可以通过函数来划分不同的功能，逻辑上每个函数执行指定的任务。
+- 当两个或多个连续的函数命名参数是同一类型，则除了最后一个类型之外，其他都可以省略。
+
+下面示例中，创建一个add函数，并进行调用：
+
+```go
+[meizhaohui@hellogitlab src]$ cat functions.go 
+/*
+ *      Filename: functions.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: go function
+ *   Create Time: 2019-11-24 22:32:44
+ * Last Modified: 2019-11-24 22:40:20
+ */
+package main
+
+import "fmt"
+
+func add(x int, y int) int {
+        return x + y
+}
+
+func main() {
+        fmt.Printf("%d + %d = %d\n", 11, 22, add(11, 22))
+}
 ```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run functions.go 
+11 + 22 = 33
+```
+
+示例中做了以下事情：
+
+- 定义``add``函数，并接受两个``int``类型的参数``x``和``y``，并返回``int``类型的值。
+- 将``x + y``的值做为``add``函数的返回值。
+- 使用``fmt.Printf``输出字符，此方法输出字符时，不会自动添加换行符，因此在格式化字符串中需要指定``\n``进行换行。
+- 使用``add(11, 22)``调用了``add``函数，并传入两个整型参数。
+- 因为``x``和``y``的参数类型相同，函数定义时``add(x int, y int)``可以简写为``add(x, y int)``。
+
+###### 函数定义
+
+Go语言函数定义格式如下：
+```go
+func function_name( [parameter list] ) [return_types] {
+   函数体
+}
+```
+
+函数定义解析：
+
+- func：函数由``func``开始声明
+- function_name：函数名称，函数名和参数列表一起构成了函数签名。
+- parameter list：参数列表，参数就像一个占位符，当函数被调用时，你可以将值传递给参数，这个值被称为实际参数。参数列表指定的是参数类型、顺序、及参数个数。参数是可选的，也就是说函数也可以不包含参数。
+- return_types：返回类型，函数返回值。return_types 是该列值的数据类型。有些功能不需要返回值，这种情况下 return_types 不是必须的。
+- 函数体：函数定义的代码集合。
+
+
+###### 函数返回多个值
+
+Go函数可以返回多个值：
+
+- Go函数可以返回任意数量的返回值。
+- 当有多个返回值时，在return_types定义时，使用``(return_type1, return_type2)``将多个返回值类型包裹起来，如果返回值类型数量与实际返回的值的数量不匹配则会报错。
+- 当返回类型列表中没有定义返回类型时，而函数体中实际却有返回值时，则运行时会提示"too many arguments to return"异常。
+
+请看下面交换两个字符串的示例：
+```go
+[meizhaohui@hellogitlab src]$ cat multi_results.go 
+/*
+ *      Filename: multi_results.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: function return multi results
+ *   Create Time: 2019-11-24 23:03:27
+ * Last Modified: 2019-11-24 23:06:45
+ */
+package main
+
+import "fmt"
+
+func swap(str1, str2 string) (string, string) {
+        return str2, str1
+}
+
+func main() {
+        a, b := swap("hello", "world")
+        fmt.Println(a, b)
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run multi_results.go
+world hello
+```
+
+``swap``函数返回了两个字符串，
+
+
+我们修改一下程序，改成以下内容：
+```go
+[meizhaohui@hellogitlab src]$ cat multi_results.go 
+/*
+ *      Filename: multi_results.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: function return multi results
+ *   Create Time: 2019-11-24 23:03:27
+ * Last Modified: 2019-11-24 23:06:45
+ */
+package main
+
+import "fmt"
+
+// --------------------------| 这个位置不一样
+func swap(str1, str2 string) string {
+        return str2, str1
+}
+
+func main() {
+        a, b := swap("hello", "world")
+        fmt.Println(a, b)
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run multi_results.go
+# command-line-arguments
+./multi_results.go:14:2: too many arguments to return
+        have (string, string)
+        want (string)
+./multi_results.go:18:7: assignment mismatch: 2 variables but swap returns 1 values
+```
+
+可以看出，当返回值数量与函数定义的返回值类型数量不匹配时，会运行异常！！
+
+###### 函数命名返回值
+
+- Go的返回值可以被命名，并且像变量那样使用。
+- 返回值的名称应当具有一定的意义，可以作为文档使用。
+- 没有参数的``return``语句返回结果的当前值。也就是``直接``返回。
+- 直接返回语句仅应用于短函数中。在长的函数中它们会影响代码的可读性。
+
+函数命名返回值的使用：
+
+```go
+[meizhaohui@hellogitlab src]$ cat named_results.go 
+/*
+ *      Filename: named_results.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: 命名返回值
+ *   Create Time: 2019-11-24 23:22:51
+ * Last Modified: 2019-11-24 23:24:58
+ */
+package main
+
+import "fmt"
+
+func split(sum int) (x, y int) {
+        x = sum * 2 / 3
+        y = sum - x
+        return
+}
+func main() {
+        fmt.Println(split(14))
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run named_results.go
+9 5
+```
+
+可以看到返回split返回了两个值9和5。
