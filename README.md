@@ -303,7 +303,7 @@ func main() {
 }
 ```
 
-### 编译Go程序
+### 编译Go程序``go build``
 
 - 使用``go build filename.go``编译go程序，如``go build hello.go``编译生成可执行文件``hello``。
 ```shell
@@ -315,7 +315,7 @@ hello  hello.go
 Hello,World
 ```
 
-### 编译并直接运行Go程序
+### 编译并直接运行Go程序``go run``
 
 - 使用``go run filename.go``编译并直接运行go程序，如``go build hello.go``编译时不生成可执行文件，直接显示运行结果。
 
@@ -329,7 +329,7 @@ Hello,World
 hello.go
 ```
 
-### 编译并安装
+### 编译并安装``go install``
 - 对go源码文件``go install``,会进行编译+链接+生成可执行文件, 会在``$GOBIN``目录下生成可执行文件。
 
 ```shell
@@ -356,7 +356,7 @@ Hello,World
 
 ### 基础
 
-### 注释
+#### 注释
 
 - Go语言支持C风格的块注释``/* */``和C++风格的行注释``//``。 行注释更为常用，而块注释则主要用作包的注释，当然也可在禁用一大段代码时使用。
 
@@ -364,7 +364,7 @@ Hello,World
 
 查看源文件内容：
 
-```shell
+```go
 [meizhaohui@hellogitlab src]$ cat hello.go
 /*
 File    : hello.go
@@ -386,38 +386,114 @@ func main() {
 再次运行程序：
 
 ```shell
-[meizhaohui@hellogitlab src]$ go run hello.go 
+[meizhaohui@hellogitlab src]$ go run hello.go
 Hello,World
 ```
 
 #### 包、变量、函数
 
+##### 包
+
+- 每个Go程序都是由一个包组成的。
+- Go程序从``main``包开始执行的。
+- 使用``package name``来定义名称为``name``的包。
+- 每个Go程序必须包含一个名称为``main``的包，即必须有一个``package main``这样的包。如果程序未定义``main``包，运行程序时则会提示``go run: cannot run non-main package``异常。
+- 必须在Go源文件中非注释的第一行指明这个文件属于哪个包。
+- 包名不一定要和源文件名保持一致。如源文件``swagger.go``中定义的包``package swag``就是这种情况。
+- 在``package main``主包中必须定义一个主函数``func main()``，否则运行程序时则会提示``function main is undeclared in the main package``异常，即主包中未声明主函数。
+- 文件夹包与包名没有直接关系，并非需要一致。
+- 同一个文件夹下的文件只能有一个包名，否则编译报错。
+
+###### 引入包
+
+- Go程序通过``import``语句引入包并在代码中使用。
+- ``import``语句告诉编译器这个程序使用哪些包。
+- ``import``语句可以像Python一样的，一次导入一个包，像hello.go中``import "fmt"``导入fmt包。
+- ``import``语句也可以一性引入多个包，也称批量导入或打包导入语句。**推荐使用批量导入语句**。
+
+下面示例中，使用了批量导入语句：
+示例：
+```go
+[meizhaohui@hellogitlab src]$ cat packages.go 
+/*
+ *      Filename: packages.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description:
+ *   Create Time: 2019-11-24 17:27:21
+ * Last Modified: 2019-11-24 17:28:34
+ */
+package main
+
+import (
+        "fmt"
+        "math/rand"
+)
+
+func main() {
+        fmt.Println("The rand Number: ", rand.Intn(10))
+}
+```
+
+此示例中，定义了main包，并批量导入了两个包，一个"fmt"包，一个"math/rand"包。
+
+运行程序：
 ```shell
-
-
+[meizhaohui@hellogitlab src]$ go run packages.go
+The rand Number:  1
 ```
 
 
-```shell
+###### 名字导出
+
+- 在导入一个包后，就可以使用其导出的名称来调用它。
+- Go语言是大小写敏感的。
+- 在Go语言中，以大写字母开头的名字就会被``导出``( exported )。类似面向对象里面的属性public。
+- 在Go语言中，以小写字母开头的名字**不会被**``导出``( exported )。类似面向对象里面的属性private。对包外不可见。
 
 
+我们将上面的packages.go程序修改一下：
+```go
+[meizhaohui@hellogitlab src]$ cat packages.go 
+/*
+ *      Filename: packages.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description:
+ *   Create Time: 2019-11-24 17:27:21
+ * Last Modified: 2019-11-24 17:54:50
+ */
+package main
+
+import (
+        "fmt"
+        "math"
+        "math/rand"
+)
+
+func main() {
+        fmt.Println("The rand Number: ", rand.Intn(10))
+        fmt.Println("The PI: ", math.pi)
+}
 ```
 
-
-
+尝试运行程序：
 ```shell
-
-
+[meizhaohui@hellogitlab src]$ go run packages.go 
+# command-line-arguments
+./packages.go:18:26: cannot refer to unexported name math.pi
+./packages.go:18:26: undefined: math.pi
 ```
 
+可以看到执行错误，无法获取到``math.pi``这个变量。
 
-
+将``math.pi``改成``math.PI``后再运行：
 
 ```shell
-
-
+[meizhaohui@hellogitlab src]$ go run packages.go 
+The rand Number:  1
+The PI:  3.141592653589793
 ```
 
+可以正常获取到``pi``的值为``3.141592653589793``。
 
 
 ```shell
