@@ -800,3 +800,53 @@ Golang的版本号: go1.13.3 linux/amd64
 ```
 
 
+#### 运算符
+
+Go语言内置的运算符有：
+
+- 算术运算符， ``+``加、``-``减、``*``乘、``/``除、``%``求余、``++``自增1、``--``自减1。
+- 关系运算符， ``==``相等、``!=``不等、``>``大于、``<``小于、``>=``大于等于、``<=``小于等于。
+
+示例：
+```go
+[meizhaohui@hellogitlab src]$ cat operators.go 
+/*
+ *      Filename: operators.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: 运算符
+ *   Create Time: 2019-11-28 23:36:59
+ * Last Modified: 2019-11-28 23:46:51
+ */
+package main
+
+import "fmt"
+
+func checknum(num1, num2 int) {
+        fmt.Printf("%d >  %d :%t\n", num1, num2, num1 > num2)
+        fmt.Printf("%d <  %d :%t\n", num1, num2, num1 < num2)
+        fmt.Printf("%d == %d :%t\n", num1, num2, num1 == num2)
+        fmt.Printf("%d != %d :%t\n", num1, num2, num1 != num2)
+        fmt.Printf("%d >= %d :%t\n", num1, num2, num1 >= num2)
+        fmt.Printf("%d <= %d :%t\n", num1, num2, num1 <= num2)
+}
+
+func main() {
+        var a, b = 1, 2
+        checknum(a, b)
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run operators.go 
+1 >  2 :false
+1 <  2 :true
+1 == 2 :false
+1 != 2 :true
+1 >= 2 :false
+1 <= 2 :true
+```
+
+- 逻辑运算符，``&&``逻辑与AND、``||``逻辑或OR、``!``逻辑非NOT。
+- 位运算符，``&``按位与(同1则为1)、``|``按位或(有1则为1)、``^``按位异或(同则为0，不同则为1)、``<<``左移、``>>``右移。
+
