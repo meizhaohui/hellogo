@@ -390,7 +390,7 @@ func main() {
 Hello,World
 ```
 
-#### 包、变量、函数
+#### 包与函数
 
 ##### 包
 
@@ -686,3 +686,117 @@ func main() {
 ```
 
 可以看到返回split返回了两个值9和5。
+
+#### 数据类型、变量与常量
+
+###### 数据类型
+
+- 数据类型用于声明函数和变量。数据类型的出现是为了把数据分成所需内存大小不同的数据，编程的时候需要用大数据的时候才需要申请大内存，就可以充分利用内存。
+- ``bool``布尔型，可取值为``true``或``false``。
+- ``string``字符串类型，字符串就是一串固定长度的字符连接起来的字符序列，**Go语言中使用UTF-8编码标识Unicode文本**。
+- 整型，``int``(有符号整数，长度取决于CPU)、``int8``(有符号8位整型)、``int16``、``int32``、``int64``、``uint``(无符号整型，长度取决于CPU)、``uint8``(无符号8位整型)、``uint16``、``uint32``、``uint64``。
+- ``byte``字节类型，类似``uint8``(无符号8位整型)。
+- 浮点类型，``float32``(32位浮点型数)和``float64``(64位浮点型数)。
+- 复数类型，``complex64``(32位实数和虚数)和``complex128``(64位实数和虚数)。
+
+##### 变量
+
+- 变量是计算机语言中能储存计算结果或能表示值抽象概念。Go语言变量名由字母、数字、下划线组成，**其中首个字符不能为数字**。
+- ``var``语句``申明(declare)``变量列表；跟函数参数列表一样，类型在最后指定。
+- ``var``语句的作用域(可见范围)可以是``包级别``或者``函数级别``。
+- 变量声明时可以对变量进行初始化，一个变量一个初始值。如``var flag bool = false``。
+- 在变量声明时，如果初始值存在，则变量类型可以忽略，这时Go会自行判断变量的类型，变量则继承初始值的类型。
+- 在变量声明时，如果初始值不存在，则变量默认为**零值**。
+- 根据变量类型不同，**零值**可能不同，数值类型**零值**为``0``，bool类型**零值**为``false``，字符串类型**零值**为``""``(空字符串)。
+- 在函数内部可以使用``:=``赋值语句进行简式声明。
+- 简式声明不能用在函数外部。
+- 简式声明时，必须要有新的变量生成。否则编译时会提示"no new variables on left side of :="异常。
+- 所有声明的局部变量必须需要使用，否则(即声明了变量却没有使用)编译时会提示"name declared and not used"。
+- 全局变量是允许声明但不使用。
+
+变量定义示例：
+```go
+[meizhaohui@hellogitlab src]$ cat types.go 
+/*
+ *      Filename: types.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: 变量声明与数据类型
+ *   Create Time: 2019-11-28 22:22:21
+ * Last Modified: 2019-11-28 23:03:42
+ */
+package main
+
+import "fmt"
+
+var num int = 10 // 声明变量并初始化
+var flag bool = false
+var sayhi string = "Hello"
+
+func Printnum(num int) {
+        fmt.Println(num)
+}
+
+func main() {
+        var num1, num2 = 1, 2 // 不需要显示声明类型，根据初始值自动推断数据类型
+        flag1, flag2 := true, false
+        name := "Go"
+        Printnum(num)
+        fmt.Println(num, num1, num2)
+        fmt.Println(flag, flag1, flag2)
+        fmt.Println(sayhi, name)
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run types.go     
+10
+10 1 2
+false true false
+Hello Go
+```
+
+可以看到全局变量可以用在自定义函数中，也可以用在主函数中。
+
+##### 常量
+
+- 常量( constants )申明与变量一样，只不过换成``const``关键字。 
+- 常量可以是字符、字符串、布尔，或者数值类型。
+- 常量不能使用``:=``简式申明。
+
+```go
+[meizhaohui@hellogitlab src]$ cat constants.go 
+/*
+ *      Filename: constants.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: 常量的使用
+ *   Create Time: 2019-11-28 23:14:04
+ * Last Modified: 2019-11-28 23:23:22
+ */
+package main
+
+import "fmt"
+
+const (
+        Pi      = 3.14
+        Version = "go1.13.3 linux/amd64"
+)
+
+func area(radius float32) float32 {
+        return Pi * radius * radius
+}
+
+func main() {
+        fmt.Println("Golang的版本号:", Version)
+        fmt.Println("圆的面积:", area(2))
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run constants.go 
+Golang的版本号: go1.13.3 linux/amd64
+圆的面积: 12.56
+```
+
+
