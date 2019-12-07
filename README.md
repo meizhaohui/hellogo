@@ -1103,3 +1103,97 @@ nsum is 16
 可以看到``range histring``并不是直接输出字符，而不输出字符对应的索引和字符对应的ASCII码对应的十进制数。
 
 ASCII码可参考：http://ascii.911cha.com/
+
+##### ``if``条件判断语句
+
+- 基本的``if``循环除了没有了``( )``之外(甚至强制不能使用它们)，看起来跟C语言一样，但大括号``{}``是必须的。
+- 语法格式``if condition { }``。condition： 关系表达式或逻辑表达式。
+- 你可以在``if``或``else if``语句中嵌入一个或多个``if``或``else if``语句。
+
+下面的程序是定义了一个``sqrt``来求一个数的平方根，当数是负数时，直接退出。正数的时候求平方根值。
+```go
+[meizhaohui@hellogitlab src]$ cat base_if.go 
+/*
+ *      Filename: base_if.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: if判断语句的使用
+ *   Create Time: 2019-12-07 17:28:07
+ * Last Modified: 2019-12-07 17:43:39
+ */
+package main
+
+import (
+        "fmt"
+        "math"
+        "os"
+)
+
+func sqrt(x float64) float64 {
+        if x < 0 {
+                fmt.Println("求平方根的数必须不小于0")
+                os.Exit(1) // 退出程序 
+        }
+        return math.Sqrt(x)
+}
+
+func main() {
+        fmt.Println(sqrt(2))
+        fmt.Println(sqrt(-2))
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run base_if.go 
+1.4142135623730951
+求平方根的数必须不小于0
+exit status 1
+[meizhaohui@hellogitlab src]$ echo $?
+1
+```
+
+-  在``if``之后，条件语句之前，可以添加变量初始化语句，使用``;``进行分隔，这种方式称为``if的便捷语句``。
+- ``if的便捷语句``定义的变量的作用域仅在``if``范围内。
+- ``if``语句中同样可以使用``else if``和``else``关键字，但不能处于行的第一个非空白字符处。
+
+下面使用便捷语句判断一个数是否是正数或者0或者为负数:
+
+```go
+[meizhaohui@hellogitlab src]$ cat -n short_if.go 
+     1  /*
+     2   *      Filename: short_if.go
+     3   *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+     4   *   Description: if的便捷语句
+     5   *   Create Time: 2019-12-07 17:55:50
+     6   * Last Modified: 2019-12-07 18:01:23
+     7   */
+     8  package main
+     9
+    10  import "fmt"
+    11
+    12  func main() {
+    13          if num := 2; num > 0 {
+    14                  fmt.Println(num, "是正数")
+    15          } else if num == 0 {
+    16                  fmt.Println(num, "为0")
+    17          } else {
+    18                  fmt.Println(num, "是负数")
+    19          }
+    20          fmt.Println(num, "获取不到")
+    21  }
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run short_if.go 
+# command-line-arguments
+./short_if.go:20:14: undefined: num
+```
+可以发现提示20行异常，``num``变量未定义，因为``num``变量作用域是``if``语句中，在``if``语句外获取不到``num``变量。
+
+删除20行的打印语句，再重新运行:
+```shell
+[meizhaohui@hellogitlab src]$ go run short_if.go 
+2 是正数
+```
+
