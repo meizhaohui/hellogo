@@ -689,7 +689,7 @@ func main() {
 
 #### 数据类型、变量与常量
 
-###### 数据类型
+##### 数据类型
 
 - 数据类型用于声明函数和变量。数据类型的出现是为了把数据分成所需内存大小不同的数据，编程的时候需要用大数据的时候才需要申请大内存，就可以充分利用内存。
 - ``bool``布尔型，可取值为``true``或``false``。
@@ -799,6 +799,93 @@ Golang的版本号: go1.13.3 linux/amd64
 圆的面积: 12.56
 ```
 
+##### 类型转换
+
+- 表达式``T(v)``将值``v``转换为类型``T``。
+- Go语言中需要显式的进行类型转换。
+- 布尔型无法参与数值运算，也无法与其他类型进行转换。
+- 不是所有数据类型都可以转换。
+- 低精度转换为高精度时是安全的，但高精度转换为低精度则会丢失数据。
+- Go语言中还有一些包可以进行跨数据类型的转换，如``strconv``包提供了字符串与简单数据类型之间的类型转换功能。可以将简单类型转换为字符串，也可以将字符串转换为其它简单类型。后续再详细介绍。
+
+看下面示例:
+```go
+[meizhaohui@hellogitlab src]$ cat -n type_conversions.go 
+     1  /*
+     2   *      Filename: type_conversions.go
+     3   *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+     4   *   Description: 数据类型转换
+     5   *   Create Time: 2019-12-07 15:01:38
+     6   * Last Modified: 2019-12-07 15:12:18
+     7   */
+     8  package main
+     9
+    10  import (
+    11          "fmt"
+    12          "math"
+    13  )
+    14
+    15  func main() {
+    16          var i int = 42
+    17          //var f float64 = float64(i)
+    18          var f float64 = i
+    19          var u uint = uint(f)
+    20          var b bool = bool(i)
+    21          fmt.Println(i, f, u, b)
+    22
+    23          x, y := 3, 4
+    24          z := math.Sqrt(float64(x*x + y*y))
+    25          fmt.Println(x, y, z)
+    26  }
+```
+
+运行程序:
+```shell
+[meizhaohui@hellogitlab src]$ go run type_conversions.go
+# command-line-arguments
+./type_conversions.go:18:6: cannot use i (type int) as type float64 in assignment
+./type_conversions.go:20:19: cannot convert i (type int) to type bool
+```
+
+可以发现18行中，想直接到``int``类型的i赋值给``float64``类型的f出现异常，不能直接隐式转换。
+
+而20行中，将``int``类型的i转换成``bool``布尔类型也提示异常，即``bool``布尔类型不能进行类型转换。
+
+我们修改一下程序，让程序能够正常运行。
+```go
+[meizhaohui@hellogitlab src]$ cat type_conversions.go 
+/*
+ *      Filename: type_conversions.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: 数据类型转换
+ *   Create Time: 2019-12-07 15:01:38
+ * Last Modified: 2019-12-07 15:18:27
+ */
+package main
+
+import (
+        "fmt"
+        "math"
+)
+
+func main() {
+        var i int = 42
+        var f float64 = float64(i)
+        var u uint = uint(f)
+        fmt.Println(i, f, u)
+
+        x, y := 3, 4
+        z := math.Sqrt(float64(x*x + y*y))
+        fmt.Println(x, y, z)
+}
+```
+
+重新运行程序:
+```shell
+[meizhaohui@hellogitlab src]$ go run type_conversions.go
+42 42 42
+3 4 5
+```
 
 #### 运算符
 
@@ -849,4 +936,8 @@ func main() {
 
 - 逻辑运算符，``&&``逻辑与AND、``||``逻辑或OR、``!``逻辑非NOT。
 - 位运算符，``&``按位与(同1则为1)、``|``按位或(有1则为1)、``^``按位异或(同则为0，不同则为1)、``<<``左移、``>>``右移。
+- 赋值运算符， ``=``简单的赋值运算符、``+=``相加后再赋值、``-=``相减后再赋值、``*=``相乘后再赋值、``/=``相除后再赋值、``%=``求余后再赋值、``<<=``左移后再赋值、``>>=``右移后再赋值、``&=``按位与后再赋值、``|=``按位或后再赋值、``^=``按位异或后再赋值。
+
+
+#### 运算符
 
