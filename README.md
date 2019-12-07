@@ -1256,5 +1256,159 @@ For details type `warranty'.
 可以看到使用牛顿法和库求8的平方根的值是一样的。
 示例中，牛顿法第1次猜值计算过程x= 1-(1*1-8)/(2*1)=1+7/2=4.5,第2次猜值计算过程x= 4.5-(4.5*4.5-8)/(2*4.5)=4.5-12.25/9=3.138888...。
 
+##### ``switch``语句
+- ``switch``语句用于基于不同条件执行不同动作，每一个``case``分支都是唯一的，从上至下逐一测试，直到匹配为止。
+
+- ``switch``语句执行的过程从上至下，直到找到匹配项，匹配项后面也不需要再加``break``。
+
+- ``switch``默认情况下``case``最后自带``break``语句，匹配成功后就不会执行其他``case``，如果需要执行后面的``case``，可以使用``fallthrough``。
+
+- 语法格式如下:
+
+```go
+switch var1 {
+    case val1:
+        ...
+    case val2:
+        ...
+    default:
+        ...
+}
+```
+- 变量``var1``可以是任何类型，而``val1``和``val2``则可以是同类型的任意值。
+- 类型不被局限于常量或整数，但必须是相同的类型；或者最终结果为相同类型的表达式。
+- 您可以同时测试多个可能符合条件的值，使用逗号分割它们，例如：``case val1, val2, val3``。
+
+下面示例判断Go程序所处的操作系统环境:
+```go
+[meizhaohui@hellogitlab src]$ cat base_switch.go 
+/*
+ *      Filename: base_switch.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: switch语句的使用
+ *   Create Time: 2019-12-07 20:45:40
+ * Last Modified: 2019-12-07 20:50:00
+ */
+package main
+
+import "fmt"
+import "runtime"
+
+func main() {
+        fmt.Print("Golang runs on ")
+        switch os := runtime.GOOS; os {
+        case "windows":
+                fmt.Println("Windows System")
+        case "linux":
+                fmt.Println("Linux System")
+        default:
+                fmt.Printf("%s System", os)
+
+        }
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run base_switch.go 
+Golang runs on Linux System
+[meizhaohui@hellogitlab src]$ go env|grep GOOS
+GOOS="linux"
+```
+
+在Windows系统上面运行程序：
+```shell
+$ go run base_switch.go
+Golang runs on Windows System
+
+$ go env|findstr GOOS
+set GOOS=windows
+```
 
 
+可以看出通过程序获取到的操作系统类型与通过``go env``获取到的环境是一致的。
+
+- 没有条件的``switch``同``switch true``一样。
+
+下面的``switch``没有设置条件:
+```go
+[meizhaohui@hellogitlab src]$ cat switch_no_condition.go 
+/*
+ *      Filename: switch_no_condition.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: 没有条件的switch语句
+ *   Create Time: 2019-12-07 20:58:19
+ * Last Modified: 2019-12-07 21:05:15
+ */
+package main
+
+import (
+        "fmt"
+        "time"
+)
+
+func main() {
+        nowtime := time.Now()
+        switch {
+        case nowtime.Hour() < 12:
+                fmt.Println("Good morning!")
+        case nowtime.Hour() < 17:
+                fmt.Println("Good afternoon!")
+        default:
+                fmt.Println("Good evening!")
+        }
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run switch_no_condition.go 
+Good evening!
+```
+
+- 使用``fallthrough``会强制执行后面的``case``语句，``fallthrough``不会判断下一条``case``的表达式结果是否为``true``。
+
+下面代码中使用``fallthrough``关键字：
+```go
+[meizhaohui@hellogitlab src]$ cat switch_fallthrough.go 
+/*
+ *      Filename: switch_fallthrough.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: switch语句中使用fallthrough关键字
+ *   Create Time: 2019-12-07 21:07:54
+ * Last Modified: 2019-12-07 21:13:06
+ */
+package main
+
+import "fmt"
+
+func main() {
+        switch {
+        case false:
+                fmt.Println("1. condition is false.")  
+                fallthrough
+        case true:
+                fmt.Println("2. condition is true.")
+                fallthrough
+        case false:
+                fmt.Println("3. condition is false.")
+                fallthrough
+        case true:
+                fmt.Println("4. condition is true.")
+        case false:
+                fmt.Println("5. condition is false.")
+                fallthrough
+        default:
+                fmt.Println("6. default case")
+        }
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run switch_fallthrough.go 
+2. condition is true.
+3. condition is false.
+4. condition is true.
+```
+从以上代码输出的结果可以看出：``switch``从第一个判断表达式为``true``的``case``开始执行，如果``case``带有 ``fallthrough``，程序会继续执行下一条``case``，且它不会去判断下一个``case``的表达式是否为``true``。
