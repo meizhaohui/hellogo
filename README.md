@@ -939,5 +939,167 @@ func main() {
 - 赋值运算符， ``=``简单的赋值运算符、``+=``相加后再赋值、``-=``相减后再赋值、``*=``相乘后再赋值、``/=``相除后再赋值、``%=``求余后再赋值、``<<=``左移后再赋值、``>>=``右移后再赋值、``&=``按位与后再赋值、``|=``按位或后再赋值、``^=``按位异或后再赋值。
 
 
-#### 运算符
+#### 流程控制
 
+##### ``for``循环语句
+
+- Go语言只有一种循环结构，就是``for``循环语句。
+- 基本的``for``循环除了没有了``( )``之外(甚至强制不能使用它们)，看起来跟C语言一样，但大括号``{}``是必须的。
+- 语法格式``for init; condition; post { }``。 init：一般为赋值表达式，给控制变量赋初值；condition： 关系表达式或逻辑表达式，循环控制条件；post： 一般为赋值表达式，给控制变量增量或减量。
+
+看一下使用``for``循环语句计算1到10的和：
+```go
+[meizhaohui@hellogitlab src]$ cat base_for.go 
+/*
+ *      Filename: base_for.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: for循环语句的使用
+ *   Create Time: 2019-12-07 15:49:24
+ * Last Modified: 2019-12-07 15:51:15
+ */
+package main
+
+import "fmt"
+
+func main() {
+        sum := 0
+        for i := 0; i <= 10; i++ {
+                sum += i
+        }
+        fmt.Println("Sum is", sum)
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run base_for.go 
+Sum is 55
+```
+
+- 有时也可以省略掉``init``前置语句和``post``后置语句，此时分号可以省略。
+
+修改一下代码：
+```go
+/*
+ *      Filename: base_for.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: for循环语句的使用
+ *   Create Time: 2019-12-07 15:49:24
+ * Last Modified: 2019-12-07 16:00:11
+ */
+package main
+
+import "fmt"
+
+func main() {
+        sum := 0
+        for i := 0; i <= 10; i++ {
+                sum += i
+        }
+        fmt.Println("Sum is", sum)
+
+        nsum := 1
+        for nsum < 10 {
+                nsum += nsum
+                fmt.Println("nsum is", nsum)
+        }
+        fmt.Println("nsum is", nsum)
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run base_for.go 
+Sum is 55
+nsum is 2
+nsum is 4
+nsum is 8
+nsum is 16
+nsum is 16
+```
+
+可以看到当``nsum``小于10时，一直会去执行``for``循环语句，也就是每次将自身数据翻倍。当nsum=16后，不再进入到``for``循环语句中。
+
+- 当``for``循环语句省略了循环条件，循环就不会结束，因此可以用更简洁地形式表达死循环。此时需要使用``Ctrl+C``或``Ctrl+D``才能停止程序的运行。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    i := 1
+    for {
+        i++ 
+        fmt.Println("i is", i)
+    }   
+    fmt.Println("after for is", i)
+}
+```
+上面程序运行时，会不停执行``for``循环语句，``i``不断进行自增1，程序不断运行下去，必须手动进行终止。
+
+- 在``for``循环语句也可以使用``range``关键字，可以对数组(array)、切片(slice)、链表(channel)或集合(map)的元素进行迭代。后续再详细介绍。
+
+修改一下代码，简单的使用``range``关键字来循环遍历字符串。
+
+```go
+[meizhaohui@hellogitlab src]$ cat base_for.go 
+/*
+ *      Filename: base_for.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: for循环语句的使用
+ *   Create Time: 2019-12-07 15:49:24
+ * Last Modified: 2019-12-07 16:23:40
+ */
+package main
+
+import "fmt"
+
+func main() {
+        sum := 0
+        for i := 0; i <= 10; i++ {
+                sum += i
+        }
+        fmt.Println("Sum is", sum)
+
+        nsum := 1
+        for nsum < 10 {
+                nsum += nsum
+                fmt.Println("nsum is", nsum)
+        }
+        fmt.Println("nsum is", nsum)
+
+        histring := "Hello,Golang!"
+
+        for i, j := range histring {
+                fmt.Println(i, j)
+        }
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run base_for.go 
+Sum is 55
+nsum is 2
+nsum is 4
+nsum is 8
+nsum is 16
+nsum is 16
+0 72
+1 101
+2 108
+3 108
+4 111
+5 44
+6 71
+7 111
+8 108
+9 97
+10 110
+11 103
+12 33
+```
+可以看到``range histring``并不是直接输出字符，而不输出字符对应的索引和字符对应的ASCII码对应的十进制数。
+
+ASCII码可参考：http://ascii.911cha.com/
