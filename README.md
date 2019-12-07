@@ -1412,3 +1412,108 @@ func main() {
 4. condition is true.
 ```
 从以上代码输出的结果可以看出：``switch``从第一个判断表达式为``true``的``case``开始执行，如果``case``带有 ``fallthrough``，程序会继续执行下一条``case``，且它不会去判断下一个``case``的表达式是否为``true``。
+
+##### ``defer``延迟执行语句
+
+- ``defer``的思想类似于C++中的析构函数，不过Go语言中"析构"的不是对象，而是函数，``defer``就是用来添加函数结束时执行的语句。
+- ``defer``类似于先进后出栈。
+
+下面看一下``defer``语句的使用。
+```go
+[meizhaohui@hellogitlab src]$ cat base_defer.go       
+/*
+ *      Filename: base_defer.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: defer语句的使用
+ *   Create Time: 2019-12-07 21:27:21
+ * Last Modified: 2019-12-07 22:54:38
+ */
+package main
+
+import "fmt"
+
+func main() {
+        defer fmt.Println("World")
+        fmt.Println("Hello")
+        for i := 0; i < 4; i++ {
+                defer fmt.Println(i)
+        }
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run base_defer.go 
+Hello
+3
+2
+1
+0
+World
+```
+可以看到虽然``fmt.Println("World")``语法在代码中先定义，但却是在``fmt.Println("Hello")``执行后再执行的，说明``defer``延迟语句起了作用。
+
+同时，因为在``for``循环体中也使用了``defer``延迟语句，按照先进后出规则，对于``for``循环会依次打印3、2、1、0,``for``循环结尾后，最后再打印栈底的"World"。
+
+另一个典型的应用是在文件读写时关闭文件。
+```go
+[meizhaohui@hellogitlab src]$ cat defer.go 
+/*
+ *      Filename: defer.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: defer语句的使用
+ *   Create Time: 2019-12-07 21:27:21
+ * Last Modified: 2019-12-07 23:09:10
+ */
+package main
+
+import (
+        "fmt"
+        "os"
+)
+
+func main() {
+        f := createFile("./defer.txt")
+        defer closeFile(f)
+        writeFile(f)
+}
+
+func createFile(p string) *os.File {
+        fmt.Println("creating")
+        f, err := os.Create(p)
+        if err != nil {
+                panic(err)
+        }
+        return f
+}
+func writeFile(f *os.File) {
+        fmt.Println("writing")
+        f.Write([]byte("hello golang!\n"))
+}
+
+func closeFile(f *os.File) {
+        fmt.Println("closing")
+        f.Close()
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run defer.go 
+creating
+writing
+closing
+[meizhaohui@hellogitlab src]$ cat defer.txt 
+hello golang!
+```
+
+可以看到因为使用了``defer closeFile(f)``进行了延迟，文件描述符f并没有立即执行，而是当写文件完成后，才关闭了文件描述符f。否则的话，不会写文件，也就查看不到defer.txt文件的内容了。
+
+
+
+
+
+
+
+
+
