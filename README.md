@@ -1197,3 +1197,64 @@ exit status 1
 2 是正数
 ```
 
+下面使用牛顿法求平方根:
+```go
+[meizhaohui@hellogitlab src]$ cat newton_method_sqrt.go 
+/*
+ *      Filename: newton_method_sqrt.go
+ *        Author: Zhaohui Mei<mzh.whut@gmail.com>
+ *   Description: 使用牛顿法(Newton Method)求平方根  x -= (x*x - F)/(x*x)
+ *   Create Time: 2019-12-07 19:31:30
+ * Last Modified: 2019-12-07 20:17:28
+ */
+package main
+
+import (
+        "fmt"
+        "math"
+)
+
+func newton(F float64) float64 {
+        guess_num := 1
+        x := float64(1)
+        for math.Abs(x*x-F) > 1e-10 {
+                fmt.Printf("第%d次猜值为%f\n", guess_num, x)
+                x -= (x*x - F) / (2 * x)
+                guess_num++
+        }
+        return x
+
+}
+
+func main() {
+        fmt.Println("库函数求平方根math.Sqrt(8) =", math.Sqrt(8))
+        fmt.Println("牛顿法求平方根newton(8) =", newton(8))
+}
+```
+
+运行程序：
+```shell
+[meizhaohui@hellogitlab src]$ go run newton_method_sqrt.go 
+库函数求平方根math.Sqrt(8) = 2.8284271247461903
+第1次猜值为1.000000
+第2次猜值为4.500000
+第3次猜值为3.138889
+第4次猜值为2.843781
+第5次猜值为2.828469
+第6次猜值为2.828427
+牛顿法求平方根newton(8) = 2.8284271247461903
+
+[meizhaohui@hellogitlab src]$ bc
+bc 1.06.95
+Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006 Free Software Foundation, Inc.
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type `warranty'. 
+2.8284271247461903*2.8284271247461903
+8.0000000000000011
+```
+9/2*9/2=81/4=20.25
+可以看到使用牛顿法和库求8的平方根的值是一样的。
+示例中，牛顿法第1次猜值计算过程x= 1-(1*1-8)/(2*1)=1+7/2=4.5,第2次猜值计算过程x= 4.5-(4.5*4.5-8)/(2*4.5)=4.5-12.25/9=3.138888...。
+
+
+
