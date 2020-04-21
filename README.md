@@ -1,4 +1,7 @@
 # hellogo
+
+Archived. Please see the [https://github.com/meizhaohui/vueblog](https://github.com/meizhaohui/vueblog) 
+
 Recording the process of learning Golang
 本仓库用于记录学习Golang相关知识点。
 
